@@ -48,7 +48,7 @@ namespace AbdusCo.CronJobs.AspNetCore
             try
             {
                 await _broadcaster.BroadcastAsync(jobs, stoppingToken);
-                _logger.LogInformation("Jobs have been broadcasted successfully");
+                _logger.LogInformation("Jobs have been broadcast successfully");
             }
             catch (Exception e)
             {
