@@ -36,10 +36,10 @@ namespace AbdusCo.CronJobs.AspNetCore
                 var factory = context.RequestServices.GetRequiredService<ICronJobFactory>();
                 var executor = context.RequestServices.GetRequiredService<ICronJobExecutor>();
 
-                context.Response.OnCompleted(() =>
+                context.Response.OnCompleted(async () =>
                 {
                     var job = factory.Create(jobName);
-                    return executor.ExecuteJobAsync(job);
+                    await executor.ExecuteJobAsync(job).ConfigureAwait(false);
                 });
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;

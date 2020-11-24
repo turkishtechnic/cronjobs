@@ -19,7 +19,7 @@ namespace AbdusCo.CronJobs.AspNetCore
         public async Task ExecuteJobAsync(ICronJob cronJob)
         {
             _logger.LogInformation($"Executing {cronJob}");
-            await cronJob.ExecuteAsync(_token);
+            await cronJob.ExecuteAsync(_token).ConfigureAwait(false);
             _logger.LogInformation($"Finished {cronJob}");
         }
     }
