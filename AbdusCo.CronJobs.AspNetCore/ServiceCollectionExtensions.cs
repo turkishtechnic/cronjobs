@@ -38,9 +38,10 @@ namespace AbdusCo.CronJobs.AspNetCore
                 });
 
             services.AddHostedService<JobBroadcasterService>();
+            services.AddHostedService<CronJobExecutorBackgroundService>();
             services.AddSingleton<ICronJobFactory, CronJobFactory>();
-            services.AddSingleton<ICronJobExecutor, CronJobExecutor>();
-            
+            services.AddSingleton<ICronJobQueue, SynchronizedCronJobQueue>();
+
             if (!assemblies.Any())
             {
                 assemblies = new[] {Assembly.GetCallingAssembly()};
