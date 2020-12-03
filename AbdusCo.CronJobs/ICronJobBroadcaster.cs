@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace AbdusCo.CronJobs
     {
         public string Application { get; set; }
         public string Environment { get; set; }
-
+        public Guid Build { get; set; }
         public IEnumerable<CronJobDescription> Jobs { get; set; }
     }
 }
