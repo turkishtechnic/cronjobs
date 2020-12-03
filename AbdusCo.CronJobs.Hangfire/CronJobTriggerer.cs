@@ -17,7 +17,7 @@ namespace AbdusCo.CronJobs.Hangfire
 
         public async Task Trigger(CronJobDescription cronJob)
         {
-            _logger.LogInformation("Triggering {Job}", cronJob);
+            _logger.LogInformation("Triggering {Job}", cronJob.Name);
             try
             {
                 // fire and forget
