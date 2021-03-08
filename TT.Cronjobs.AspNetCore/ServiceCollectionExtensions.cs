@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     public static class ServiceCollectionExtensions
     {

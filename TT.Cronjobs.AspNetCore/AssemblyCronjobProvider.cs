@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Options;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     public class AssemblyCronjobProvider : ICronjobProvider
     {

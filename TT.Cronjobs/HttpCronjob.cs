@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AbdusCo.CronJobs
+namespace TT.Cronjobs
 {
     public class HttpCronjob
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace AbdusCo.CronJobs
+namespace TT.Cronjobs
 {
     public interface ICronjobQueue
     {

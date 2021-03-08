@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AbdusCo.CronJobs.AspNetCore\AbdusCo.CronJobs.AspNetCore.csproj" />
+      <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
     </ItemGroup>
 
 </Project>

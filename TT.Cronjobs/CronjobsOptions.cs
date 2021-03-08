@@ -1,4 +1,4 @@
-﻿namespace AbdusCo.CronJobs
+﻿namespace TT.Cronjobs
 {
     public class CronjobsOptions
     {

@@ -12,6 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AbdusCo.CronJobs\AbdusCo.CronJobs.csproj" />
+      <ProjectReference Include="..\TT.Cronjobs\TT.Cronjobs.csproj" />
     </ItemGroup>
 </Project>

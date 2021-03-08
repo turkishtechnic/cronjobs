@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     internal class CronjobRegistrationBroadcaster : ICronjobBroadcaster
     {

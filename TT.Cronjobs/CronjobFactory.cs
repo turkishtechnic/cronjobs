@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AbdusCo.CronJobs
+namespace TT.Cronjobs
 {
     public class CronjobFactory : ICronjobFactory
     {

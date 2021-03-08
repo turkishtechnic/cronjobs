@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     public class SynchronizedCronjobQueue : ICronjobQueue
     {

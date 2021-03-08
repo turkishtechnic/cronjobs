@@ -1,5 +1,5 @@
-using AbdusCo.CronJobs;
-using AbdusCo.CronJobs.AspNetCore;
+using TT.Cronjobs;
+using TT.Cronjobs.AspNetCore;
 using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

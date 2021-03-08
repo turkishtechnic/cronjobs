@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AbdusCo.CronJobs;
+using TT.Cronjobs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

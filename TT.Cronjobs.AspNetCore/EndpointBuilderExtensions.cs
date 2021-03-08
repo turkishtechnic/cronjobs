@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     public static class EndpointRouteBuilderExtensions
     {

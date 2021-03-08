@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using AbdusCo.CronJobs;
+using TT.Cronjobs;
 using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs

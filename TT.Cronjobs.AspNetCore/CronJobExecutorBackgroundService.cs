@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace TT.Cronjobs.AspNetCore
 {
     public class CronJobExecutorBackgroundService : BackgroundService
     {
