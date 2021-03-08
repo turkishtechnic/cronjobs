@@ -24,7 +24,7 @@ namespace HangfireDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CronjobsOptions>(Configuration.GetSection(CronjobsOptions.Key));
-            services.AddCronJobs();
+            services.AddCronjobs();
 
             services.AddTransient<CreateReport>();
             services.AddTransient<ReallyLongCronjob>();
@@ -35,7 +35,7 @@ namespace HangfireDemo
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "HangfireDemo", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "SampleWebProject", Version = "v1"});
             });
         }
 
@@ -50,7 +50,7 @@ namespace HangfireDemo
                 app.UseSwaggerUI(c =>
                 {
                     c.RoutePrefix = "";
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HangfireDemo v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SampleWebProject v1");
                 });
             }
 
@@ -61,7 +61,7 @@ namespace HangfireDemo
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCronJobWebhook("/-/cronjobs");
+                endpoints.MapCronjobWebhook("/-/cronjobs");
                 endpoints.MapControllers();
             });
         }

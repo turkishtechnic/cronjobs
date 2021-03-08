@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireDemo", "HangfireDemo\HangfireDemo.csproj", "{F4352773-CED5-4922-AF77-3AB5B98E3292}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebProject", "src\SampleWebProject\SampleWebProject.csproj", "{F4352773-CED5-4922-AF77-3AB5B98E3292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.AspNetCore", "TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.AspNetCore", "src\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs", "TT.Cronjobs\TT.Cronjobs.csproj", "{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs", "src\TT.Cronjobs\TT.Cronjobs.csproj", "{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs.Hangfire", "AbdusCo.CronJobs.Hangfire\AbdusCo.CronJobs.Hangfire.csproj", "{2B72B744-7510-4BDD-865E-7DA6641E3DEA}"
 EndProject
