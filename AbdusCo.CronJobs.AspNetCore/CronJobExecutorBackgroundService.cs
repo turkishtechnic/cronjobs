@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -8,10 +9,10 @@ namespace AbdusCo.CronJobs.AspNetCore
 {
     public class CronJobExecutorBackgroundService : BackgroundService
     {
-        private readonly ICronJobQueue _jobQueue;
+        private readonly ICronjobQueue _jobQueue;
         private readonly ILogger<CronJobExecutorBackgroundService> _logger;
 
-        public CronJobExecutorBackgroundService(ICronJobQueue jobQueue,
+        public CronJobExecutorBackgroundService(ICronjobQueue jobQueue,
             ILogger<CronJobExecutorBackgroundService> logger)
         {
             _jobQueue = jobQueue;
@@ -20,7 +21,7 @@ namespace AbdusCo.CronJobs.AspNetCore
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Waiting for a cron job to be triggered");
+            _logger.LogInformation("Waiting for a cronjob to be triggered");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -33,11 +34,14 @@ namespace AbdusCo.CronJobs.AspNetCore
                 _logger.LogInformation("Executing {Job}", job);
                 try
                 {
-                    await job.ExecuteAsync(stoppingToken);
+                    // TODO: await UpdateStatusAsync(ExeStatus.Started);
+                    await job.Cronjob.ExecuteAsync(stoppingToken);
+                    // TODO: await UpdateStatusAsync(ExeStatus.Finished);
                     _logger.LogInformation("Finished executing {Job}", job);
                 }
                 catch (Exception e)
                 {
+                    // TODO: await UpdateStatusAsync(ExeStatus.Failed);
                     _logger.LogError(e, "Failed to execute {Job}", job);
                 }
             }

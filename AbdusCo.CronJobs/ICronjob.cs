@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace AbdusCo.CronJobs
 {
-    public interface ICronJobExecutor
+    public interface ICronjob
     {
-        Task ExecuteJobAsync(ICronJob cronJob);
+        Task ExecuteAsync(CancellationToken cancellationToken);
     }
 }

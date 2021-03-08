@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Reflection;
@@ -10,31 +11,31 @@ using Microsoft.Extensions.Hosting;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    internal class CronJobRegistrationBroadcaster : ICronJobBroadcaster
+    internal class CronjobRegistrationBroadcaster : ICronjobBroadcaster
     {
         private readonly HttpClient _httpClient;
         private readonly IHostEnvironment _environment;
 
-        public CronJobRegistrationBroadcaster(HttpClient httpClient,
-            IHostEnvironment environment)
+        public CronjobRegistrationBroadcaster(HttpClient httpClient,
+                                              IHostEnvironment environment)
         {
             _httpClient = httpClient;
             _environment = environment;
         }
 
-        public async Task BroadcastAsync(IEnumerable<CronJobDescription> jobs, CancellationToken cancellationToken)
+        public async Task BroadcastAsync(List<HttpCronjob> jobs, CancellationToken cancellationToken)
         {
-            var payload = new CronJobBroadcast
+            var buildId = Assembly.GetEntryAssembly()!.ManifestModule.ModuleVersionId.ToString();
+            var payload = new ProjectBatchRegistration
             {
-                Application = _environment.ApplicationName,
-                Environment = _environment.EnvironmentName,
-                Build = Assembly.GetEntryAssembly()!.ManifestModule.ModuleVersionId,
-                Jobs = jobs
+                Title = $"{_environment.ApplicationName} ({_environment.EnvironmentName})",
+                Version = buildId.Substring(0, Math.Min(buildId.Length, 8)),
+                Cronjobs = jobs
             };
 
             var json = JsonSerializer.Serialize(payload);
             var res = await _httpClient.PostAsync(
-                "",
+                "/api/projects/batchcreate",
                 new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
                 cancellationToken: cancellationToken
             );

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
@@ -12,15 +13,17 @@ namespace AbdusCo.CronJobs.AspNetCore
     public static class EndpointRouteBuilderExtensions
     {
         public static IEndpointConventionBuilder MapCronJobWebhook(this IEndpointRouteBuilder endpoints,
-            string endpoint = "/-/cronjobs")
+                                                                   string endpoint = "/-/cronjobs")
         {
             endpoints.MapGet(endpoint, context =>
             {
-                var providers = context.RequestServices.GetRequiredService<IEnumerable<ICronJobProvider>>();
+                var providers = context.RequestServices.GetRequiredService<IEnumerable<ICronjobProvider>>();
                 var jobs = providers.SelectMany(p => p.CronJobs).ToList();
 
-                var payload = JsonSerializer.Serialize(jobs,
-                    new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+                var payload = JsonSerializer.Serialize(
+                    jobs,
+                    new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}
+                );
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 return context.Response.WriteAsync(payload);
             });
@@ -33,11 +36,13 @@ namespace AbdusCo.CronJobs.AspNetCore
                     return;
                 }
 
-                var factory = context.RequestServices.GetRequiredService<ICronJobFactory>();
-                var executor = context.RequestServices.GetRequiredService<ICronJobQueue>();
+                var factory = context.RequestServices.GetRequiredService<ICronjobFactory>();
+                var executorQueue = context.RequestServices.GetRequiredService<ICronjobQueue>();
+
+                var executionId = await new StreamReader(context.Request.Body).ReadToEndAsync();
 
                 var job = factory.Create(jobName);
-                await executor.EnqueueAsync(job).ConfigureAwait(false);
+                await executorQueue.EnqueueAsync(new CronJobExecution(executionId, job)).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;
             });

@@ -1,9 +1,9 @@
 ﻿namespace AbdusCo.CronJobs
 {
-    public class CronJobsOptions
+    public class CronjobsOptions
     {
-        public const string Key = "CronJobs";
-        public string RegistrationEndpoint { get; set; }
+        public const string Key = "Cronjobs";
+        public string RegistrationApiUrl { get; set; }
         public string UrlTemplate { get; set; }
         public int RetryCount { get; set; } = 5;
         public int WaitSeconds { get; set; } = 5;

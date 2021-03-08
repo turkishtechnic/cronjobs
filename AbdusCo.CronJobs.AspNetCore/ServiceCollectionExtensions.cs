@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
@@ -12,7 +13,7 @@ namespace AbdusCo.CronJobs.AspNetCore
     {
         public static IServiceCollection AddCronJobs(
             this IServiceCollection services,
-            Action<CronJobsOptions> configure = null,
+            Action<CronjobsOptions> configure = null,
             params Assembly[] assemblies
         )
         {
@@ -21,16 +22,15 @@ namespace AbdusCo.CronJobs.AspNetCore
                 services.Configure(configure);
             }
 
-
-            services.AddHttpClient<ICronJobBroadcaster, CronJobRegistrationBroadcaster>((provider, client) =>
+            services.AddHttpClient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>((provider, client) =>
                 {
-                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>().Value;
-                    client.BaseAddress = new Uri(options.RegistrationEndpoint);
+                    var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
+                    client.BaseAddress = new Uri(options.RegistrationApiUrl);
                     client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 })
                 .AddPolicyHandler((provider, _) =>
                 {
-                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>().Value;
+                    var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
                     var builder = HttpPolicyExtensions
                         .HandleTransientHttpError()
                         .WaitAndRetryAsync(options.RetryCount, i => TimeSpan.FromSeconds(Math.Pow(2, i)));
@@ -39,25 +39,22 @@ namespace AbdusCo.CronJobs.AspNetCore
 
             services.AddHostedService<JobBroadcasterService>();
             services.AddHostedService<CronJobExecutorBackgroundService>();
-            services.AddSingleton<ICronJobFactory, CronJobFactory>();
-            services.AddSingleton<ICronJobQueue, SynchronizedCronJobQueue>();
+            services.AddSingleton<ICronjobFactory, CronjobFactory>();
+            services.AddSingleton<ICronjobQueue, SynchronizedCronjobQueue>();
 
-            if (!assemblies.Any())
+            if (assemblies == null || !assemblies.Any())
             {
                 assemblies = new[] {Assembly.GetCallingAssembly()};
             }
 
-            services.AddTransient<ICronJobProvider, AssemblyScanningCronJobProvider>(
+            services.AddTransient<ICronjobProvider, AssemblyCronjobProvider>(
                 provider =>
                 {
-                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>();
-                    return new AssemblyScanningCronJobProvider(options, assemblies);
+                    var options = provider.GetRequiredService<IOptions<CronjobsOptions>>();
+                    return new AssemblyCronjobProvider(options, assemblies);
                 });
 
             return services;
         }
-
-        public static IServiceCollection AddCronJobs(this IServiceCollection services)
-            => AddCronJobs(services, assemblies: Assembly.GetEntryAssembly());
     }
 }

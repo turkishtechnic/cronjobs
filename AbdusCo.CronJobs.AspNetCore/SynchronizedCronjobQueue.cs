@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    public class SynchronizedCronJobQueue : ICronJobQueue
+    public class SynchronizedCronjobQueue : ICronjobQueue
     {
-        private readonly ConcurrentQueue<ICronJob> _jobQueue =
-            new ConcurrentQueue<ICronJob>();
+        private readonly ConcurrentQueue<CronJobExecution> _jobQueue =
+            new ConcurrentQueue<CronJobExecution>();
 
         private readonly SemaphoreSlim _signal = new SemaphoreSlim(0);
 
-        public Task EnqueueAsync(ICronJob task)
+        public Task EnqueueAsync(CronJobExecution task)
         {
             if (task == null)
             {
@@ -24,7 +24,7 @@ namespace AbdusCo.CronJobs.AspNetCore
             return Task.CompletedTask;
         }
 
-        public async Task<ICronJob> DequeueAsync(CancellationToken cancellationToken)
+        public async Task<CronJobExecution> DequeueAsync(CancellationToken cancellationToken)
         {
             await _signal.WaitAsync(cancellationToken);
             _jobQueue.TryDequeue(out var task);

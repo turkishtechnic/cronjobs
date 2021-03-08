@@ -8,16 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs
 {
-    [Cron("*/3 * * * *")]
+    [Cron("*/20 * * * *")]
     [Description("Performs a task that takes really long")]
-    public class ReallyLongCronJob: ICronJob
+    public class ReallyLongCronjob: ICronjob
     {
-        private readonly ILogger<ReallyLongCronJob> _logger;
+        private readonly ILogger<ReallyLongCronjob> _logger;
 
-        public ReallyLongCronJob(ILogger<ReallyLongCronJob> logger)
+        public ReallyLongCronjob(ILogger<ReallyLongCronjob> logger)
         {
             _logger = logger;
         }
+        
+        // TT.Foundation.Cronjobs
+        // 
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {

@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireDemo", "HangfireDemo\HangfireDemo.csproj", "{F4352773-CED5-4922-AF77-3AB5B98E3292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireServer", "HangfireServer\HangfireServer.csproj", "{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs.AspNetCore", "AbdusCo.CronJobs.AspNetCore\AbdusCo.CronJobs.AspNetCore.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs", "AbdusCo.CronJobs\AbdusCo.CronJobs.csproj", "{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}"
@@ -20,10 +18,6 @@ Global
 		{F4352773-CED5-4922-AF77-3AB5B98E3292}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4352773-CED5-4922-AF77-3AB5B98E3292}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4352773-CED5-4922-AF77-3AB5B98E3292}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU

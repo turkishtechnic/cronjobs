@@ -3,12 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs
 {
-    [Cron("*/1 * * * *", "1 1 * * *")]
-    public class CreateReport : ICronJob
+    // TODO: use crontab exp builder
+    [Cron("*/5 * * * *")]
+    public class CreateReport : ICronjob
     {
         private readonly ILogger<CreateReport> _logger;
         private readonly DemoDbContext _db;
