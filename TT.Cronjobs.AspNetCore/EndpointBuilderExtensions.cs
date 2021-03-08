@@ -12,7 +12,7 @@ namespace TT.Cronjobs.AspNetCore
 {
     public static class EndpointRouteBuilderExtensions
     {
-        public static IEndpointConventionBuilder MapCronJobWebhook(this IEndpointRouteBuilder endpoints,
+        public static IEndpointConventionBuilder MapCronjobWebhook(this IEndpointRouteBuilder endpoints,
                                                                    string endpoint = "/-/cronjobs")
         {
             endpoints.MapGet(endpoint, context =>

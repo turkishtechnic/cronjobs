@@ -10,7 +10,7 @@ namespace TT.Cronjobs.AspNetCore
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCronJobs(
+        public static IServiceCollection AddCronjobs(
             this IServiceCollection services,
             Action<CronjobsOptions> configure = null,
             params Assembly[] assemblies
