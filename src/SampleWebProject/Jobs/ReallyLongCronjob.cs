@@ -24,7 +24,7 @@ namespace SampleWebProject.Jobs
         {
             var watch = Stopwatch.StartNew();
             _logger.LogInformation("starting...");
-            while (watch.Elapsed < TimeSpan.FromSeconds(70) && !cancellationToken.IsCancellationRequested)
+            while (watch.Elapsed < TimeSpan.FromSeconds(20) && !cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
                 _logger.LogInformation($"still working (took {watch.Elapsed} so far)...");
