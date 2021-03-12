@@ -35,7 +35,7 @@ namespace TT.Cronjobs.AspNetCore
                     continue;
                 }
 
-                _logger.LogInformation("Executing {Job}", execution);
+                _logger.LogInformation("Executing {Cronjob}", execution.Cronjob);
                 var timer = Stopwatch.StartNew();
                 try
                 {
@@ -52,7 +52,7 @@ namespace TT.Cronjobs.AspNetCore
                         },
                         cancellationToken: stoppingToken);
                     
-                    _logger.LogInformation("Finished executing {Job}", execution);
+                    _logger.LogInformation("Finished executing {Cronjob}", execution.Cronjob);
                 }
                 catch (Exception e)
                 {
@@ -65,11 +65,11 @@ namespace TT.Cronjobs.AspNetCore
                             ["ExceptionStackTrace"] = e.StackTrace,
                         },
                         cancellationToken: stoppingToken);
-                    _logger.LogError(e, "Failed to execute {Job}", execution);
+                    _logger.LogError(e, "Failed to execute {Cronjob}", execution.Cronjob);
                 }
                 finally
                 {
-                    _logger.LogInformation("Finished {Job}", execution);
+                    _logger.LogInformation("Finished {Cronjob}", execution.Cronjob);
                 }
             }
         }
