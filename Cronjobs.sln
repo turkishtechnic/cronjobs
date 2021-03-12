@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.AspNetCore", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs", "src\TT.Cronjobs\TT.Cronjobs.csproj", "{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.Blitz", "src\TT.Cronjobs.Blitz\TT.Cronjobs.Blitz.csproj", "{E5FC85EA-961E-4885-8CF9-5116F9D204BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5FC85EA-961E-4885-8CF9-5116F9D204BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5FC85EA-961E-4885-8CF9-5116F9D204BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5FC85EA-961E-4885-8CF9-5116F9D204BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5FC85EA-961E-4885-8CF9-5116F9D204BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

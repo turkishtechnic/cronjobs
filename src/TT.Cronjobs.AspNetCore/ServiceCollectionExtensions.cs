@@ -3,14 +3,17 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Extensions.Http;
 
 namespace TT.Cronjobs.AspNetCore
 {
+    public class CronjobsBuilder
+    {
+        public IServiceCollection Services { get; set; }
+    }
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCronjobs(
+        
+        public static CronjobsBuilder AddCronjobs(
             this IServiceCollection services,
             Action<CronjobsOptions> configure = null,
             params Assembly[] assemblies
@@ -20,22 +23,8 @@ namespace TT.Cronjobs.AspNetCore
             {
                 services.Configure(configure);
             }
-
+            
             services.AddTransient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>();
-            services.AddHttpClient<ICronjobApiClient, BlitzCronjobApiClient>((provider, client) =>
-                {
-                    var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
-                    client.BaseAddress = new Uri(options.ApiBaseUrl);
-                    client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
-                })
-                .AddPolicyHandler((provider, _) =>
-                {
-                    var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
-                    var builder = HttpPolicyExtensions
-                        .HandleTransientHttpError()
-                        .WaitAndRetryAsync(options.RetryCount, i => TimeSpan.FromSeconds(Math.Pow(2, i)));
-                    return builder;
-                });
 
             services.AddHostedService<JobBroadcasterService>();
             services.AddHostedService<CronJobExecutorBackgroundService>();
@@ -54,7 +43,7 @@ namespace TT.Cronjobs.AspNetCore
                     return new AssemblyCronjobProvider(options, assemblies);
                 });
 
-            return services;
+            return new CronjobsBuilder{Services = services};
         }
     }
 }

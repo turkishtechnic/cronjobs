@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using SampleWebProject.Jobs;
 using TT.Cronjobs;
 using TT.Cronjobs.AspNetCore;
+using TT.Cronjobs.Blitz;
 
 namespace SampleWebProject
 {
@@ -24,7 +25,7 @@ namespace SampleWebProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CronjobsOptions>(Configuration.GetSection(CronjobsOptions.Key));
-            services.AddCronjobs();
+            services.AddCronjobs().UseBlitz();
 
             services.AddTransient<FailingCronjob>();
             services.AddTransient<CreateHourlyReport>();

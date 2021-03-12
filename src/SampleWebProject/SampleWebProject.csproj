@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
+      <ProjectReference Include="..\TT.Cronjobs.Blitz\TT.Cronjobs.Blitz.csproj" />
     </ItemGroup>
 
 </Project>
