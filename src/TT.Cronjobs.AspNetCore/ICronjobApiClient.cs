@@ -38,7 +38,7 @@ namespace TT.Cronjobs.AspNetCore
         {
             var json = JsonSerializer.Serialize(registration);
             var res = await _httpClient.PostAsync(
-                "/projects/batchcreate",
+                "projects/batchcreate",
                 new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
                 cancellationToken: cancellationToken
             );
@@ -57,8 +57,8 @@ namespace TT.Cronjobs.AspNetCore
                 Details = details
             });
             var res = await _httpClient.PostAsync(
-                $"/executions/{executionId}/status",
-                new StringContent(serialized),
+                $"executions/{executionId}/status",
+                new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json),
                 cancellationToken
             );
             if (!res.IsSuccessStatusCode)
