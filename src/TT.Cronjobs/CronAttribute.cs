@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace TT.Cronjobs
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class CronAttribute : Attribute
     {
         public string[] CronExpressions { get; }
