@@ -3,12 +3,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using TT.Cronjobs;
 using Microsoft.Extensions.Logging;
+using TT.Cronjobs;
 
 namespace SampleWebProject.Jobs
 {
-    [Cron("*/20 * * * *")]
+    [Cron("*/5 * * * *")]
+    [DisplayName("Heavy computation")]
     [Description("Performs a task that takes really long")]
     public class ReallyLongCronjob: ICronjob
     {
@@ -18,9 +19,6 @@ namespace SampleWebProject.Jobs
         {
             _logger = logger;
         }
-        
-        // TT.Foundation.Cronjobs
-        // 
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
