@@ -41,13 +41,22 @@ namespace TT.Cronjobs.AspNetCore
                 {
                     await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Started,
                         cancellationToken: stoppingToken);
+                    
                     await execution.Cronjob.ExecuteAsync(stoppingToken);
+                    
+                    timer.Stop();
                     await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Finished,
+                        details: new Dictionary<string, object>
+                        {
+                            ["Elapsed"] = timer.ElapsedMilliseconds,
+                        },
                         cancellationToken: stoppingToken);
+                    
                     _logger.LogInformation("Finished executing {Job}", execution);
                 }
                 catch (Exception e)
                 {
+                    timer.Stop();
                     await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Failed,
                         details: new Dictionary<string, object>
                         {
@@ -60,13 +69,6 @@ namespace TT.Cronjobs.AspNetCore
                 }
                 finally
                 {
-                    timer.Stop();
-                    await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Failed,
-                        details: new Dictionary<string, object>
-                        {
-                            ["Elapsed"] = timer.ElapsedMilliseconds,
-                        },
-                        cancellationToken: stoppingToken);
                     _logger.LogInformation("Finished {Job}", execution);
                 }
             }
