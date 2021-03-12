@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -6,16 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace TT.Cronjobs.AspNetCore
 {
-    public class CronJobExecutorBackgroundService : BackgroundService
+    internal class CronJobExecutorBackgroundService : BackgroundService
     {
         private readonly ICronjobQueue _jobQueue;
+        private readonly ICronjobApiClient _cronjobApi;
         private readonly ILogger<CronJobExecutorBackgroundService> _logger;
 
         public CronJobExecutorBackgroundService(ICronjobQueue jobQueue,
-            ILogger<CronJobExecutorBackgroundService> logger)
+                                                ILogger<CronJobExecutorBackgroundService> logger,
+                                                ICronjobApiClient cronjobApi)
         {
             _jobQueue = jobQueue;
             _logger = logger;
+            _cronjobApi = cronjobApi;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,24 +29,45 @@ namespace TT.Cronjobs.AspNetCore
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var job = await _jobQueue.DequeueAsync(stoppingToken);
-                if (job == null)
+                var execution = await _jobQueue.DequeueAsync(stoppingToken);
+                if (execution == null)
                 {
                     continue;
                 }
 
-                _logger.LogInformation("Executing {Job}", job);
+                _logger.LogInformation("Executing {Job}", execution);
+                var timer = Stopwatch.StartNew();
                 try
                 {
-                    // TODO: await UpdateStatusAsync(ExeStatus.Started);
-                    await job.Cronjob.ExecuteAsync(stoppingToken);
-                    // TODO: await UpdateStatusAsync(ExeStatus.Finished);
-                    _logger.LogInformation("Finished executing {Job}", job);
+                    await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Started,
+                        cancellationToken: stoppingToken);
+                    await execution.Cronjob.ExecuteAsync(stoppingToken);
+                    await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Finished,
+                        cancellationToken: stoppingToken);
+                    _logger.LogInformation("Finished executing {Job}", execution);
                 }
                 catch (Exception e)
                 {
-                    // TODO: await UpdateStatusAsync(ExeStatus.Failed);
-                    _logger.LogError(e, "Failed to execute {Job}", job);
+                    await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Failed,
+                        details: new Dictionary<string, object>
+                        {
+                            ["ExceptionMessage"] = e.Message,
+                            ["ExceptionSource"] = e.Source,
+                            ["ExceptionStackTrace"] = e.StackTrace,
+                        },
+                        cancellationToken: stoppingToken);
+                    _logger.LogError(e, "Failed to execute {Job}", execution);
+                }
+                finally
+                {
+                    timer.Stop();
+                    await _cronjobApi.UpdateExecutionStatusAsync(execution.Id, ExecutionState.Failed,
+                        details: new Dictionary<string, object>
+                        {
+                            ["Elapsed"] = timer.ElapsedMilliseconds,
+                        },
+                        cancellationToken: stoppingToken);
+                    _logger.LogInformation("Finished {Job}", execution);
                 }
             }
         }

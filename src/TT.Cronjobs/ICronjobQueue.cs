@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TT.Cronjobs
@@ -11,10 +12,10 @@ namespace TT.Cronjobs
 
     public class CronJobExecution
     {
-        public string Id { get; }
+        public Guid Id { get; }
         public ICronjob Cronjob { get; }
 
-        public CronJobExecution(string id, ICronjob cronjob)
+        public CronJobExecution(Guid id, ICronjob cronjob)
         {
             Id = id;
             Cronjob = cronjob;

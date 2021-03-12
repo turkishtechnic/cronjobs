@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
@@ -39,10 +39,10 @@ namespace TT.Cronjobs.AspNetCore
                 var factory = context.RequestServices.GetRequiredService<ICronjobFactory>();
                 var executorQueue = context.RequestServices.GetRequiredService<ICronjobQueue>();
 
-                var executionId = await new StreamReader(context.Request.Body).ReadToEndAsync();
+                var executionId = context.Request.Headers["Execution-Id"].ToString();
 
                 var job = factory.Create(jobName);
-                await executorQueue.EnqueueAsync(new CronJobExecution(executionId, job)).ConfigureAwait(false);
+                await executorQueue.EnqueueAsync(new CronJobExecution(Guid.Parse(executionId), job)).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;
             });

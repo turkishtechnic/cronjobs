@@ -21,10 +21,10 @@ namespace TT.Cronjobs.AspNetCore
                 services.Configure(configure);
             }
 
-            services.AddHttpClient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>((provider, client) =>
+            services.AddHttpClient<ICronjobApiClient, BlitzCronjobApiClient>((provider, client) =>
                 {
                     var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
-                    client.BaseAddress = new Uri(options.RegistrationApiUrl);
+                    client.BaseAddress = new Uri(options.ApiBaseUrl);
                     client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 })
                 .AddPolicyHandler((provider, _) =>
