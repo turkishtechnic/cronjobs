@@ -26,6 +26,7 @@ namespace SampleWebProject
             services.Configure<CronjobsOptions>(Configuration.GetSection(CronjobsOptions.Key));
             services.AddCronjobs();
 
+            services.AddTransient<FailingCronjob>();
             services.AddTransient<CreateHourlyReport>();
             services.AddTransient<ReallyLongCronjob>();
 
