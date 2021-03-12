@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace HangfireDemo
+namespace SampleWebProject
 {
     public class Sale
     {

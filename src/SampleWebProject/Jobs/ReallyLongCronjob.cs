@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TT.Cronjobs;
 using Microsoft.Extensions.Logging;
 
-namespace HangfireDemo.Jobs
+namespace SampleWebProject.Jobs
 {
     [Cron("*/20 * * * *")]
     [Description("Performs a task that takes really long")]

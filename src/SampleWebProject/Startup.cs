@@ -1,6 +1,3 @@
-using TT.Cronjobs;
-using TT.Cronjobs.AspNetCore;
-using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using SampleWebProject.Jobs;
+using TT.Cronjobs;
+using TT.Cronjobs.AspNetCore;
 
-namespace HangfireDemo
+namespace SampleWebProject
 {
     public class Startup
     {
@@ -26,7 +26,7 @@ namespace HangfireDemo
             services.Configure<CronjobsOptions>(Configuration.GetSection(CronjobsOptions.Key));
             services.AddCronjobs();
 
-            services.AddTransient<CreateReport>();
+            services.AddTransient<CreateHourlyReport>();
             services.AddTransient<ReallyLongCronjob>();
 
             services.AddDbContext<DemoDbContext>(builder => builder.UseInMemoryDatabase(nameof(DemoDbContext)));
@@ -61,7 +61,7 @@ namespace HangfireDemo
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCronjobWebhook("/-/cronjobs");
+                endpoints.MapCronjobWebhook();
                 endpoints.MapControllers();
             });
         }
