@@ -21,6 +21,7 @@ namespace TT.Cronjobs.AspNetCore
                 services.Configure(configure);
             }
 
+            services.AddTransient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>();
             services.AddHttpClient<ICronjobApiClient, BlitzCronjobApiClient>((provider, client) =>
                 {
                     var options = provider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
