@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Description>TT.Cronjobs integration with ASP.NET Core 3.1+</Description>
     </PropertyGroup>
 
     <ItemGroup>

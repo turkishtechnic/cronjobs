@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <Description>Primitives for building remotely-triggered cronjobs</Description>
     </PropertyGroup>
 
     <ItemGroup>
