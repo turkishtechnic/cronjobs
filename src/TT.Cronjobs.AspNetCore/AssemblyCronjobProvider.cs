@@ -36,8 +36,8 @@ namespace TT.Cronjobs.AspNetCore
             var cronAttr = type.GetCustomAttribute<CronAttribute>() ??
                            throw new TypeLoadException($"{type} does not have any {nameof(CronAttribute)} attribute");
 
-            var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description
-                              ?? type.FullName;
+            var title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
+            var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName;
 
             for (var index = 0; index < cronAttr.CronExpressions.Length; index++)
             {
@@ -46,7 +46,7 @@ namespace TT.Cronjobs.AspNetCore
                 var suffix = index > 0 ? $".{index}" : "";
                 yield return new HttpCronjob
                 {
-                    Title = $"{type.Name}{suffix}",
+                    Title = $"{title}{suffix}",
                     Description = description,
                     Url = _urlTemplate.Replace("{name}", type.Name.ToLowerInvariant()),
                     Cron = cron,
