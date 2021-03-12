@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: publish TT.Cronjobs
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: "./src/TT.Cronjobs/TT.Cronjobs.csproj"
+          VERSION_STATIC: 1.0.0
+          NUGET_KEY: ${{secrets.NUGET_TOKEN}}
+          NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
+          
+      - name: publish TT.Cronjobs.AspNetCore
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: "./src/TT.Cronjobs.AspNetCore/TT.Cronjobs.AspNetCore.csproj"
+          VERSION_STATIC: 1.0.0
+          NUGET_KEY: ${{secrets.NUGET_TOKEN}}
+          NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
+          
+      - name: publish TT.Cronjobs.Blitz
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: "./src/TT.Cronjobs.Blitz/TT.Cronjobs.Blitz.csproj"
+          VERSION_STATIC: 1.0.0
+          NUGET_KEY: ${{secrets.NUGET_TOKEN}}
+          NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
