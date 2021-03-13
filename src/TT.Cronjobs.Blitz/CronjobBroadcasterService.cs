@@ -10,17 +10,17 @@ using TT.Cronjobs.AspNetCore;
 
 namespace TT.Cronjobs.Blitz
 {
-    internal class JobBroadcasterService : BackgroundService
+    internal class CronjobBroadcasterService : BackgroundService
     {
         private readonly BlitzOptions _options;
         private readonly CronjobWebhookProvider _cronjobWebhookProvider;
         private readonly ICronjobBroadcaster _broadcaster;
-        private readonly ILogger<JobBroadcasterService> _logger;
+        private readonly ILogger<CronjobBroadcasterService> _logger;
 
-        public JobBroadcasterService(
+        public CronjobBroadcasterService(
             IOptions<BlitzOptions> options,
             ICronjobBroadcaster broadcaster,
-            ILogger<JobBroadcasterService> logger,
+            ILogger<CronjobBroadcasterService> logger,
             CronjobWebhookProvider cronjobWebhookProvider)
         {
             _options = options.Value;

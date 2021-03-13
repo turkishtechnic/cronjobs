@@ -24,7 +24,7 @@ namespace TT.Cronjobs.Blitz
 
             builder.Services.AddTransient<CronjobExecutionEvents, BlitzExecutionInterceptor>();
             builder.Services.AddTransient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>();
-            builder.Services.AddHostedService<JobBroadcasterService>();
+            builder.Services.AddHostedService<CronjobBroadcasterService>();
 
             builder.Services.AddHttpClient<ICronjobApiClient, BlitzCronjobApiClient>((provider, client) =>
                 {
