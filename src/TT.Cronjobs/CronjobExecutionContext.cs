@@ -4,12 +4,14 @@ namespace TT.Cronjobs
 {
     public class CronjobExecutionContext
     {
-        public Guid Id { get; }
+        public IServiceProvider Services { get; set; }
+        public string ExecutionId { get; }
         public ICronjob Cronjob { get; }
 
-        public CronjobExecutionContext(Guid id, ICronjob cronjob)
+        public CronjobExecutionContext(ICronjob cronjob, string executionId, IServiceProvider services)
         {
-            Id = id;
+            ExecutionId = executionId;
+            Services = services;
             Cronjob = cronjob;
         }
     }

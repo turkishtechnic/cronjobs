@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
+        <PackageReference Include="Ardalis.SmartEnum" Version="2.0.0" />
+        <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
     </ItemGroup>
 
 </Project>

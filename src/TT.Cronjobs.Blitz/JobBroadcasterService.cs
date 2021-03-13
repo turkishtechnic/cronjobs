@@ -6,41 +6,43 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TT.Cronjobs.AspNetCore;
 
-namespace TT.Cronjobs.AspNetCore
+namespace TT.Cronjobs.Blitz
 {
     internal class JobBroadcasterService : BackgroundService
     {
-        private readonly CronjobsOptions _options;
-        private readonly IEnumerable<ICronjobProvider> _jobProviders;
+        private readonly BlitzOptions _options;
+        private readonly CronjobWebhookProvider _cronjobWebhookProvider;
         private readonly ICronjobBroadcaster _broadcaster;
         private readonly ILogger<JobBroadcasterService> _logger;
 
         public JobBroadcasterService(
-            IOptions<CronjobsOptions> options,
-            IEnumerable<ICronjobProvider> jobProviders,
-            ICronjobBroadcaster broadcaster, ILogger<JobBroadcasterService> logger)
+            IOptions<BlitzOptions> options,
+            ICronjobBroadcaster broadcaster,
+            ILogger<JobBroadcasterService> logger,
+            CronjobWebhookProvider cronjobWebhookProvider)
         {
             _options = options.Value;
-            _jobProviders = jobProviders;
             _broadcaster = broadcaster;
             _logger = logger;
+            _cronjobWebhookProvider = cronjobWebhookProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await Task.Delay(TimeSpan.FromSeconds(_options.WaitSeconds), stoppingToken);
-            
-            _logger.LogInformation("Finding jobs");
-            List<HttpCronjob> jobs;
+
+            _logger.LogInformation("Finding cronjobs");
+            List<CronjobWebhook> jobs;
             try
             {
-                jobs = _jobProviders.SelectMany(p => p.CronJobs).ToList();
-                _logger.LogInformation($"Found {jobs.Count} jobs. Broadcasting all jobs");
+                jobs = _cronjobWebhookProvider.Cronjobs.ToList();
+                _logger.LogInformation($"Found {jobs.Count} cronjobs. Broadcasting all cronjobs");
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "An error happened while listing of jobs");
+                _logger.LogError(e, "An error occurred while discovering cronjobs");
                 throw;
             }
 
@@ -51,7 +53,7 @@ namespace TT.Cronjobs.AspNetCore
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Cannot broadcast jobs.");
+                _logger.LogError(e, $"Failed to broadcast cronjobs.");
             }
         }
     }

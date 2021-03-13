@@ -1,10 +1,10 @@
-﻿namespace TT.Cronjobs
+﻿namespace TT.Cronjobs.AspNetCore
 {
     public class CronjobsOptions
     {
         public const string Key = "Cronjobs";
-        public string UrlTemplate { get; set; } = "/-/cronjobs/{name}";
-        public string PublicUrl { get; set; }
+        public string RoutePattern { get; set; } = "/-/cronjobs";
+        public string WebhookBaseUrl { get; set; }
         public CronjobExecutionEvents Events { get; set; } = new CronjobExecutionEvents();
     }
 }

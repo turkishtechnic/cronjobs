@@ -3,8 +3,9 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using TT.Cronjobs.AspNetCore;
 
-namespace TT.Cronjobs.AspNetCore
+namespace TT.Cronjobs.Blitz
 {
     internal class CronjobRegistrationBroadcaster : ICronjobBroadcaster
     {
@@ -18,7 +19,7 @@ namespace TT.Cronjobs.AspNetCore
             _cronjobApi = cronjobApi;
         }
 
-        public async Task BroadcastAsync(List<HttpCronjob> jobs, CancellationToken cancellationToken)
+        public async Task BroadcastAsync(IEnumerable<CronjobWebhook> jobs, CancellationToken cancellationToken)
         {
             var buildId = Assembly.GetEntryAssembly()!.ManifestModule.ModuleVersionId.ToString();
             var payload = new ProjectBatchRegistration

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -34,21 +33,19 @@ namespace TT.Cronjobs.Blitz
         }
 
         public async Task UpdateExecutionStatusAsync(Guid executionId,
-                                                     ExecutionState state,
-                                                     Dictionary<string, object> details = null,
+                                                     StatusUpdate update,
                                                      CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Sending stating update for execution {ExecutionId}", executionId);
-            var serialized = JsonSerializer.Serialize(new
-            {
-                State = state.Name,
-                Details = details
-            });
+            
+            var payload = JsonSerializer.Serialize(update);
+            
             var res = await _httpClient.PostAsync(
                 $"executions/{executionId}/status",
-                new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json),
+                new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json),
                 cancellationToken
             );
+            
             if (!res.IsSuccessStatusCode)
             {
                 _logger.LogWarning("Cannot send status update for execution {ExecutionId}. API returned {StatusCode}",
