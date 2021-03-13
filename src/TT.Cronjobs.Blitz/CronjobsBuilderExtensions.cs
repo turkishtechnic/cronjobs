@@ -7,6 +7,8 @@ using Polly;
 using Polly.Extensions.Http;
 using TT.Cronjobs.AspNetCore;
 
+[assembly: InternalsVisibleTo("TT.Cronjobs.Tests")]
+
 namespace TT.Cronjobs.Blitz
 {
     public static class CronjobsBuilderExtensions
