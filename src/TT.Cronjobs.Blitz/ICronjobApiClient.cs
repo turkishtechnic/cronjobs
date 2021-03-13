@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TT.Cronjobs.AspNetCore;
@@ -11,7 +10,7 @@ namespace TT.Cronjobs.Blitz
         Task BatchRegisterProjectAsync(ProjectBatchRegistration registration,
                                        CancellationToken cancellationToken = default);
 
-        Task UpdateExecutionStatusAsync(Guid executionId,
+        Task UpdateExecutionStatusAsync(string executionId,
                                         StatusUpdate update,
                                         CancellationToken cancellationToken = default);
     }

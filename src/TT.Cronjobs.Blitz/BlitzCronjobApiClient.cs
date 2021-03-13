@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -32,7 +31,7 @@ namespace TT.Cronjobs.Blitz
             res.EnsureSuccessStatusCode();
         }
 
-        public async Task UpdateExecutionStatusAsync(Guid executionId,
+        public async Task UpdateExecutionStatusAsync(string executionId,
                                                      StatusUpdate update,
                                                      CancellationToken cancellationToken = default)
         {
