@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -11,21 +10,23 @@ namespace TT.Cronjobs.Blitz
     {
         private readonly ICronjobApiClient _cronjobApi;
         private readonly IHostEnvironment _environment;
+        private readonly IVersionProvider _versionProvider;
 
         public CronjobRegistrationBroadcaster(IHostEnvironment environment,
-                                              ICronjobApiClient cronjobApi)
+                                              ICronjobApiClient cronjobApi,
+                                              IVersionProvider versionProvider)
         {
             _environment = environment;
             _cronjobApi = cronjobApi;
+            _versionProvider = versionProvider;
         }
 
         public async Task BroadcastAsync(IEnumerable<CronjobWebhook> jobs, CancellationToken cancellationToken)
         {
-            var buildId = Assembly.GetEntryAssembly()!.ManifestModule.ModuleVersionId.ToString();
             var payload = new ProjectBatchRegistration
             {
                 Title = $"{_environment.ApplicationName} ({_environment.EnvironmentName})",
-                Version = buildId,
+                Version = _versionProvider.Version,
                 Cronjobs = jobs
             };
             await _cronjobApi.BatchRegisterProjectAsync(payload, cancellationToken);

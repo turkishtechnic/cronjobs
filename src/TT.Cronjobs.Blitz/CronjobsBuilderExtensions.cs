@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,6 +23,7 @@ namespace TT.Cronjobs.Blitz
                 builder.Services.AddSingleton<IConfigureOptions<BlitzOptions>, ConfigureBlitz>();
             }
 
+            builder.Services.AddTransient<IVersionProvider>(provider => new AssemblyVersionProvider(builder.Assembly));
             builder.Services.AddTransient<CronjobExecutionEvents, BlitzExecutionInterceptor>();
             builder.Services.AddTransient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>();
             builder.Services.AddHostedService<CronjobBroadcasterService>();
