@@ -41,12 +41,10 @@ namespace TT.Cronjobs
                 return null;
             }
 
-            return new CronjobInfo
+            return new CronjobInfo(type.Name, cronAttr.Cron)
             {
-                Type = type,
                 Title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name,
                 Description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName,
-                Cron = cronAttr.Cron
             };
         }
     }
