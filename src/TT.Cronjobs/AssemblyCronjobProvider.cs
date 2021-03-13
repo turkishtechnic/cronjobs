@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace TT.Cronjobs.AspNetCore
+namespace TT.Cronjobs
 {
     public class AssemblyCronjobProvider : ICronjobProvider
     {
-        private readonly string _urlTemplate;
+        private readonly CronjobsOptions _options;
         private readonly Assembly[] _assemblies;
+        private readonly ILogger<AssemblyCronjobProvider> _logger;
 
         public AssemblyCronjobProvider(IOptions<CronjobsOptions> options,
+                                       ILogger<AssemblyCronjobProvider> logger,
                                        params Assembly[] assemblies)
         {
-            _urlTemplate = options.Value.UrlTemplate;
+            _options = options.Value;
+            _logger = logger;
             _assemblies = assemblies;
         }
 
@@ -28,31 +32,31 @@ namespace TT.Cronjobs.AspNetCore
                             && !t.IsAbstract
                             && t.IsPublic
                             && typeof(ICronjob).IsAssignableFrom(t))
-                .SelectMany(CreateCronjobDescription);
+                .Select(BuildHttpCronjob)
+                .Where(it => it != null);
         }
 
-        private IEnumerable<HttpCronjob> CreateCronjobDescription(Type type)
+        public HttpCronjob BuildHttpCronjob(Type type)
         {
-            var cronAttr = type.GetCustomAttribute<CronAttribute>() ??
-                           throw new TypeLoadException($"{type} does not have any {nameof(CronAttribute)} attribute");
+            var cronAttr = type.GetCustomAttribute<CronAttribute>();
+            if (cronAttr == null)
+            {
+                _logger.LogWarning($"{{Cronjob}} is not annotated with {nameof(CronAttribute)}", type.FullName);
+                return null;
+            }
 
             var title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
             var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName;
 
-            for (var index = 0; index < cronAttr.CronExpressions.Length; index++)
+            return new HttpCronjob
             {
-                var cron = cronAttr.CronExpressions[index];
-                // dont append a suffix if there's only one cron schedule
-                var suffix = index > 0 ? $".{index}" : "";
-                yield return new HttpCronjob
-                {
-                    Title = $"{title}{suffix}",
-                    Description = description,
-                    Url = _urlTemplate.Replace("{name}", type.Name.ToLowerInvariant()),
-                    Cron = cron,
-                    HttpMethod = "POST"
-                };
-            }
+                Type = type,
+                Title = title,
+                Description = description,
+                Url = _options.MakeUrl(type.Name.ToLowerInvariant()),
+                Cron = cronAttr.Cron,
+                HttpMethod = "POST"
+            };
         }
     }
 }

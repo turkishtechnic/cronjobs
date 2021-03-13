@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Linq;
 
 namespace TT.Cronjobs
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class CronAttribute : Attribute
     {
-        public string[] CronExpressions { get; }
+        public string Cron { get; }
 
-        public CronAttribute(params string[] cronExpressions)
+        public CronAttribute(string cron)
         {
-            if (!cronExpressions.Any())
+            if (cron == null)
             {
-                throw new ArgumentException("You must provide at least one cron expression", nameof(cronExpressions));
+                throw new ArgumentNullException(nameof(cron));
             }
 
-            if (cronExpressions.Any(e => !IsValid(e)))
+            if (!IsValid(cron))
             {
-                throw new ArgumentException("Invalid cron expression", nameof(cronExpressions));
+                throw new FormatException("Cron expression is not formatted correctly");
             }
 
-            CronExpressions = cronExpressions;
+            Cron = cron;
         }
 
         private bool IsValid(string cron) => cron.Split(" ").Length == 5;
