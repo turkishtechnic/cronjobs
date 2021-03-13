@@ -41,7 +41,7 @@ namespace TT.Cronjobs
                 return null;
             }
 
-            return new CronjobInfo(type.Name, cronAttr.Cron)
+            return new CronjobInfo(type)
             {
                 Title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name,
                 Description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName,

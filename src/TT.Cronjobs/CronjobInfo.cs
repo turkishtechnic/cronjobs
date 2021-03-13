@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Reflection;
 
 namespace TT.Cronjobs
 {
     public class CronjobInfo
     {
-        public CronjobInfo(string name, string cron)
+        public CronjobInfo(Type type)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Cron = cron ?? throw new ArgumentNullException(nameof(cron));
+            Type = type;
+            var cronAttr = type.GetCustomAttribute<CronAttribute>();
+            Cron = cronAttr?.Cron ?? throw new ArgumentNullException(nameof(type), $"{type.Name} is not annotated with {nameof(CronAttribute)}");
+            Name = type.Name;
         }
 
         public Type Type { get; set; }
