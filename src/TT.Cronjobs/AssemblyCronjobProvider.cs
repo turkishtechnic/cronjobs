@@ -4,39 +4,35 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace TT.Cronjobs
 {
     public class AssemblyCronjobProvider : ICronjobProvider
     {
-        private readonly CronjobsOptions _options;
         private readonly Assembly[] _assemblies;
         private readonly ILogger<AssemblyCronjobProvider> _logger;
 
-        public AssemblyCronjobProvider(IOptions<CronjobsOptions> options,
-                                       ILogger<AssemblyCronjobProvider> logger,
+        public AssemblyCronjobProvider(ILogger<AssemblyCronjobProvider> logger,
                                        params Assembly[] assemblies)
         {
-            _options = options.Value;
             _logger = logger;
             _assemblies = assemblies;
         }
 
-        public IEnumerable<HttpCronjob> CronJobs => GetCronjobs();
+        public IEnumerable<CronjobInfo> Cronjobs => GetCronjobs();
 
-        private IEnumerable<HttpCronjob> GetCronjobs()
+        private IEnumerable<CronjobInfo> GetCronjobs()
         {
             return _assemblies.SelectMany(a => a.GetTypes())
                 .Where(t => t.IsClass
                             && !t.IsAbstract
                             && t.IsPublic
                             && typeof(ICronjob).IsAssignableFrom(t))
-                .Select(BuildHttpCronjob)
+                .Select(BuildCronjobInfo)
                 .Where(it => it != null);
         }
 
-        public HttpCronjob BuildHttpCronjob(Type type)
+        public CronjobInfo BuildCronjobInfo(Type type)
         {
             var cronAttr = type.GetCustomAttribute<CronAttribute>();
             if (cronAttr == null)
@@ -45,17 +41,12 @@ namespace TT.Cronjobs
                 return null;
             }
 
-            var title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
-            var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName;
-
-            return new HttpCronjob
+            return new CronjobInfo
             {
                 Type = type,
-                Title = title,
-                Description = description,
-                Url = _options.MakeUrl(type.Name.ToLowerInvariant()),
-                Cron = cronAttr.Cron,
-                HttpMethod = "POST"
+                Title = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name,
+                Description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.FullName,
+                Cron = cronAttr.Cron
             };
         }
     }

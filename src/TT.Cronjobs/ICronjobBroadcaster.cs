@@ -6,6 +6,6 @@ namespace TT.Cronjobs
 {
     public interface ICronjobBroadcaster
     {
-        Task BroadcastAsync(List<HttpCronjob> jobs, CancellationToken cancellationToken);
+        Task BroadcastAsync(List<CronjobInfo> jobs, CancellationToken cancellationToken);
     }
 }

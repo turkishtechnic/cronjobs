@@ -4,6 +4,6 @@ namespace TT.Cronjobs
 {
     public interface ICronjobProvider
     {
-        IEnumerable<HttpCronjob> CronJobs { get; }
+        IEnumerable<CronjobInfo> Cronjobs { get; }
     }
 }
