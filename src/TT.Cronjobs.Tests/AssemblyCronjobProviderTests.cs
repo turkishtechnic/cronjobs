@@ -24,7 +24,7 @@ namespace TT.Cronjobs.Tests
             var provider = CreateAssemblyCronjobProvider();
             Assert.NotEmpty(provider.Cronjobs);
             Assert.Contains(provider.Cronjobs, cronjob => cronjob.Type == typeof(SimpleCronjob));
-            Assert.DoesNotContain(provider.Cronjobs, cronjob => cronjob.Type == typeof(HiddenCronjob));
+            Assert.DoesNotContain(provider.Cronjobs, cronjob => cronjob.Type == typeof(NonPublicCronjob));
         }
 
         [Theory]

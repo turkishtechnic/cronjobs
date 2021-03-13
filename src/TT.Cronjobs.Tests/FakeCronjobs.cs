@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,13 @@ namespace TT.Cronjobs.Tests
     }
 
     [Cron("* * * * *")]
-    internal class HiddenCronjob : ICronjob
+    public class FailingCronjob : ICronjob
+    {
+        public Task ExecuteAsync(CancellationToken cancellationToken) => throw new Exception("something bad happened");
+    }
+
+    [Cron("* * * * *")]
+    internal class NonPublicCronjob : ICronjob
     {
         public Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
