@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+[assembly: InternalsVisibleTo("TT.Cronjobs.Tests")]
 
 namespace TT.Cronjobs.AspNetCore
 {

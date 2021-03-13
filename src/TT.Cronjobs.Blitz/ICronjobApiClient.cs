@@ -5,7 +5,7 @@ using TT.Cronjobs.AspNetCore;
 
 namespace TT.Cronjobs.Blitz
 {
-    internal interface ICronjobApiClient
+    public interface ICronjobApiClient
     {
         Task BatchRegisterProjectAsync(ProjectBatchRegistration registration,
                                        CancellationToken cancellationToken = default);
@@ -14,8 +14,8 @@ namespace TT.Cronjobs.Blitz
                                         StatusUpdate update,
                                         CancellationToken cancellationToken = default);
     }
-    
-    internal sealed class StatusUpdate
+
+    public sealed class StatusUpdate
     {
         public string State { get; }
         public Dictionary<string, object> Details { get; }
@@ -27,14 +27,14 @@ namespace TT.Cronjobs.Blitz
         }
     }
 
-    internal sealed class ProjectBatchRegistration
+    public sealed class ProjectBatchRegistration
     {
         public string Title { get; set; }
         public string Version { get; set; }
         public IEnumerable<CronjobWebhook> Cronjobs { get; set; }
     }
 
-    internal sealed class ExecutionState
+    public sealed class ExecutionState
     {
         public string Name { get; }
 
