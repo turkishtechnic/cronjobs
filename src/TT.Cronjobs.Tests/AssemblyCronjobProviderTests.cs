@@ -1,8 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -13,7 +10,7 @@ namespace TT.Cronjobs.Tests
         [Fact]
         public void MissingCronAttributePreventsDiscovery()
         {
-            var provider = MakeAssemblyCronjobProvider();
+            var provider = CreateAssemblyCronjobProvider();
 
             var invalidCronjob = typeof(CronjobWithoutCronAttribute);
             var info = provider.BuildCronjobInfo(invalidCronjob);
@@ -24,7 +21,7 @@ namespace TT.Cronjobs.Tests
         [Fact]
         public void CronjobIsDiscoverable()
         {
-            var provider = MakeAssemblyCronjobProvider();
+            var provider = CreateAssemblyCronjobProvider();
             Assert.NotEmpty(provider.Cronjobs);
             Assert.Contains(provider.Cronjobs, cronjob => cronjob.Type == typeof(SimpleCronjob));
             Assert.DoesNotContain(provider.Cronjobs, cronjob => cronjob.Type == typeof(HiddenCronjob));
@@ -35,13 +32,13 @@ namespace TT.Cronjobs.Tests
         [InlineData(typeof(SimpleCronjob), nameof(SimpleCronjob), null)]
         public void CronjobAttributesOverridesDefaultNames(Type type, string title, string description)
         {
-            var provider = MakeAssemblyCronjobProvider();
+            var provider = CreateAssemblyCronjobProvider();
             var info = provider.BuildCronjobInfo(type);
             Assert.Equal(info.Title, title);
             Assert.Equal(info.Description, description ?? info.Type.FullName);
         }
 
-        private static AssemblyCronjobProvider MakeAssemblyCronjobProvider()
+        private static AssemblyCronjobProvider CreateAssemblyCronjobProvider()
         {
             var provider = new AssemblyCronjobProvider(
                 new NullLogger<AssemblyCronjobProvider>(),
@@ -49,30 +46,5 @@ namespace TT.Cronjobs.Tests
             );
             return provider;
         }
-    }
-
-    public class CronjobWithoutCronAttribute : ICronjob
-    {
-        public Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    }
-
-    [Cron("* * * * *")]
-    public class SimpleCronjob : ICronjob
-    {
-        public Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    }
-
-    [Cron("* * * * *")]
-    internal class HiddenCronjob : ICronjob
-    {
-        public Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    }
-
-    [Cron("* * * * *")]
-    [DisplayName("title")]
-    [Description("description")]
-    public class AnnotatedCronjob : ICronjob
-    {
-        public Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
