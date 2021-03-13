@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +9,14 @@ namespace TT.Cronjobs.AspNetCore
 {
     public class CronjobsBuilder
     {
-        public CronjobsBuilder(IServiceCollection services) => Services = services;
+        public CronjobsBuilder(IServiceCollection services, Assembly assembly)
+        {
+            Services = services;
+            Assembly = assembly;
+        }
+
         public IServiceCollection Services { get; set; }
+        public Assembly Assembly { get; set; }
     }
 
     public static class ServiceCollectionExtensions
@@ -19,7 +24,7 @@ namespace TT.Cronjobs.AspNetCore
         public static CronjobsBuilder AddCronjobs(
             this IServiceCollection services,
             Action<CronjobsOptions> configure = null,
-            params Assembly[] assemblies
+            Assembly assembly = null
         )
         {
             if (configure != null)
@@ -31,10 +36,7 @@ namespace TT.Cronjobs.AspNetCore
                 services.AddSingleton<IConfigureOptions<CronjobsOptions>, ConfigureCronjobs>();
             }
 
-            if (assemblies == null || !assemblies.Any())
-            {
-                assemblies = new[] {Assembly.GetCallingAssembly()};
-            }
+            assembly ??= Assembly.GetCallingAssembly();
 
             services.AddHostedService<CronjobExecutorBackgroundService>();
             services.AddSingleton<ICronjobFactory, ScopedCronjobFactory>();
@@ -45,10 +47,10 @@ namespace TT.Cronjobs.AspNetCore
                 provider =>
                 {
                     var logger = provider.GetRequiredService<ILogger<AssemblyCronjobProvider>>();
-                    return new AssemblyCronjobProvider(logger, assemblies);
+                    return new AssemblyCronjobProvider(logger, assembly);
                 });
 
-            return new CronjobsBuilder(services);
+            return new CronjobsBuilder(services, assembly);
         }
 
         internal class ConfigureCronjobs : IConfigureOptions<CronjobsOptions>
