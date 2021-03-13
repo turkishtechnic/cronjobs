@@ -52,7 +52,7 @@ namespace TT.Cronjobs.Tests
             var response = await client.PostAsync($"cronjobs/{nameof(SimpleCronjob)}", new StringContent(""));
             Assert.False(response.IsSuccessStatusCode);
         }
-        
+
         [Fact]
         public async Task CronjobIsTriggered()
         {
@@ -67,6 +67,33 @@ namespace TT.Cronjobs.Tests
             req.Headers.Add("Execution-Id", "1");
             var response = await client.SendAsync(req);
             Assert.True(response.IsSuccessStatusCode);
+        }
+
+        [Fact]
+        public async Task ExecutionEventsAreDispatched()
+        {
+            var host = await CreateHost(options =>
+            {
+                options.RoutePattern = "cronjobs";
+                options.WebhookBaseUrl = "https://example.com";
+                options.Events.OnStarted = context =>
+                {
+                    Assert.Equal("1", context.ExecutionId);
+                    Assert.IsType<SimpleCronjob>(context.Cronjob);
+                    return Task.CompletedTask;
+                };
+                options.Events.OnFinished = context =>
+                {
+                    Assert.Equal("1", context.ExecutionId);
+                    Assert.IsType<SimpleCronjob>(context.Cronjob);
+                    return Task.CompletedTask;
+                };
+            });
+
+            var client = host.GetTestClient();
+            var req = new HttpRequestMessage(HttpMethod.Post, $"cronjobs/{nameof(SimpleCronjob)}");
+            req.Headers.Add("Execution-Id", "1");
+            await client.SendAsync(req);
         }
 
         class FakeCronjobProvider : ICronjobProvider
