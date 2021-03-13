@@ -2,6 +2,6 @@
 {
     public interface ICronjobFactory
     {
-        ICronjob Create(string jobName);
+        ICronjob Create(string cronjobName);
     }
 }
