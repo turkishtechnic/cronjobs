@@ -15,6 +15,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: run tests
+        run: dotnet test
+
       - name: publish TT.Cronjobs
         uses: rohith/publish-nuget@v2
         with:
@@ -23,7 +26,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
           INCLUDE_SYMBOLS: true
-          
+
       - name: publish TT.Cronjobs.AspNetCore
         uses: rohith/publish-nuget@v2
         with:
@@ -32,7 +35,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
           INCLUDE_SYMBOLS: true
-          
+
       - name: publish TT.Cronjobs.Blitz
         uses: rohith/publish-nuget@v2
         with:
