@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace TT.Cronjobs.AspNetCore
@@ -10,9 +11,9 @@ namespace TT.Cronjobs.AspNetCore
     {
         public IServiceCollection Services { get; set; }
     }
+
     public static class ServiceCollectionExtensions
     {
-        
         public static CronjobsBuilder AddCronjobs(
             this IServiceCollection services,
             Action<CronjobsOptions> configure = null,
@@ -23,12 +24,9 @@ namespace TT.Cronjobs.AspNetCore
             {
                 services.Configure(configure);
             }
-            
-            services.AddTransient<ICronjobBroadcaster, CronjobRegistrationBroadcaster>();
 
-            services.AddHostedService<JobBroadcasterService>();
-            services.AddHostedService<CronJobExecutorBackgroundService>();
-            services.AddSingleton<ICronjobFactory, CronjobFactory>();
+            services.AddHostedService<CronjobExecutorBackgroundService>();
+            services.AddSingleton<ICronjobFactory, ScopedCronjobFactory>();
             services.AddSingleton<ICronjobQueue, SynchronizedCronjobQueue>();
 
             if (assemblies == null || !assemblies.Any())
@@ -40,10 +38,11 @@ namespace TT.Cronjobs.AspNetCore
                 provider =>
                 {
                     var options = provider.GetRequiredService<IOptions<CronjobsOptions>>();
-                    return new AssemblyCronjobProvider(options, assemblies);
+                    var logger = provider.GetRequiredService<ILogger<AssemblyCronjobProvider>>();
+                    return new AssemblyCronjobProvider(options, logger, assemblies);
                 });
 
-            return new CronjobsBuilder{Services = services};
+            return new CronjobsBuilder {Services = services};
         }
     }
 }

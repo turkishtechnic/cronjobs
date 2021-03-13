@@ -7,12 +7,12 @@ namespace TT.Cronjobs.AspNetCore
 {
     public class SynchronizedCronjobQueue : ICronjobQueue
     {
-        private readonly ConcurrentQueue<CronJobExecution> _jobQueue =
-            new ConcurrentQueue<CronJobExecution>();
+        private readonly ConcurrentQueue<CronjobExecutionContext> _jobQueue =
+            new ConcurrentQueue<CronjobExecutionContext>();
 
         private readonly SemaphoreSlim _signal = new SemaphoreSlim(0);
 
-        public Task EnqueueAsync(CronJobExecution task)
+        public Task EnqueueAsync(CronjobExecutionContext task)
         {
             if (task == null)
             {
@@ -24,7 +24,7 @@ namespace TT.Cronjobs.AspNetCore
             return Task.CompletedTask;
         }
 
-        public async Task<CronJobExecution> DequeueAsync(CancellationToken cancellationToken)
+        public async Task<CronjobExecutionContext> DequeueAsync(CancellationToken cancellationToken)
         {
             await _signal.WaitAsync(cancellationToken);
             _jobQueue.TryDequeue(out var task);

@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TT.Cronjobs
+namespace TT.Cronjobs.AspNetCore
 {
-    public class CronjobFactory : ICronjobFactory
+    public class ScopedCronjobFactory : ICronjobFactory
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public CronjobFactory(IServiceScopeFactory scopeFactory)
+        public ScopedCronjobFactory(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }

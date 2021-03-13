@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace TT.Cronjobs.AspNetCore
 {
@@ -15,6 +16,7 @@ namespace TT.Cronjobs.AspNetCore
         public static IEndpointConventionBuilder MapCronjobWebhook(this IEndpointRouteBuilder endpoints,
                                                                    string endpoint = "/-/cronjobs")
         {
+            var options = endpoints.ServiceProvider.GetRequiredService<IOptions<CronjobsOptions>>().Value;
             endpoints.MapGet(endpoint, context =>
             {
                 var providers = context.RequestServices.GetRequiredService<IEnumerable<ICronjobProvider>>();
@@ -42,7 +44,7 @@ namespace TT.Cronjobs.AspNetCore
                 var executionId = context.Request.Headers["Execution-Id"].ToString();
 
                 var job = factory.Create(jobName);
-                await executorQueue.EnqueueAsync(new CronJobExecution(Guid.Parse(executionId), job)).ConfigureAwait(false);
+                await executorQueue.EnqueueAsync(new CronjobExecutionContext(Guid.Parse(executionId), job)).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;
             });
