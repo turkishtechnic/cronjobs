@@ -36,7 +36,7 @@ namespace TT.Cronjobs.Tests
             var items = JsonSerializer.Deserialize<List<CronjobWebhook>>(json, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
             Assert.NotEmpty(items);
             Assert.Equal(new CronjobInfo(typeof(SimpleCronjob)).Cron, items.First().Cron);
-            Assert.Equal($"https://example.com/cronjobs/{nameof(SimpleCronjob)}", items.First().Url);
+            Assert.Equal($"https://example.com/cronjobs/{nameof(SimpleCronjob).ToLowerInvariant()}", items.First().Url);
         }
 
         [Fact]

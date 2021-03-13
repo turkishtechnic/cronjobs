@@ -10,7 +10,7 @@ namespace TT.Cronjobs.Tests
         {
             var attribute = new CronAttribute("* * * * *");
             Assert.NotNull(attribute.Cron);
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<FormatException>(() =>
             {
                 var _ = new CronAttribute("*");
             });
