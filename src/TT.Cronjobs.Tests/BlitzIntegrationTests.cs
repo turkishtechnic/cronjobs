@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using TT.Cronjobs.AspNetCore;
 using TT.Cronjobs.Blitz;
 using Xunit;
@@ -36,6 +38,30 @@ namespace TT.Cronjobs.Tests
             Assert.NotNull(blitzClient.ProjectBatchRegistration);
             Assert.NotEmpty(blitzClient.ProjectBatchRegistration.Cronjobs);
             Assert.Equal(versionProvider.Version, blitzClient.ProjectBatchRegistration.Version);
+        }
+
+        [Fact]
+        public async Task CronjobStatusUpdatesAreSent()
+        {
+            var mockClient = new Mock<ICronjobApiClient>();
+            mockClient
+                .Setup(it => it.UpdateExecutionStatusAsync(It.IsAny<string>(), It.IsAny<StatusUpdate>(), default))
+                .Returns(Task.CompletedTask);
+
+            var monitor = new BlitzExecutionMonitor(mockClient.Object);
+            var executor = new CronjobExecutor(monitor, new NullLogger<CronjobExecutor>());
+            await executor.ExecuteAsync(new CronjobExecutionContext(new SimpleCronjob(), "1"));
+
+            mockClient.Verify(
+                m => m.UpdateExecutionStatusAsync("1", It.IsAny<StatusUpdate>(), default),
+                Times.Exactly(2)
+            );
+
+            await executor.ExecuteAsync(new CronjobExecutionContext(new FailingCronjob(), "1"));
+            mockClient.Verify(
+                m => m.UpdateExecutionStatusAsync("1", It.Is<StatusUpdate>(update => update.State == ExecutionState.Failed.Name), default),
+                Times.Once
+            );
         }
 
         private async Task<IHost> CreateHost(Action<BlitzOptions> configureBlitz,
