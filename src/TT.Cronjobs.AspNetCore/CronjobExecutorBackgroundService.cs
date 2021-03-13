@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,15 +9,15 @@ namespace TT.Cronjobs.AspNetCore
     {
         private readonly ICronjobQueue _jobQueue;
         private readonly ILogger<CronjobExecutorBackgroundService> _logger;
-        private readonly ICronjobExecutionMonitor _executionMonitor;
+        private readonly ICronjobExecutor _executor;
 
         public CronjobExecutorBackgroundService(ICronjobQueue jobQueue,
                                                 ILogger<CronjobExecutorBackgroundService> logger,
-                                                ICronjobExecutionMonitor executionMonitor)
+                                                ICronjobExecutor executor)
         {
             _jobQueue = jobQueue;
             _logger = logger;
-            _executionMonitor = executionMonitor;
+            _executor = executor;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -33,24 +32,8 @@ namespace TT.Cronjobs.AspNetCore
                     continue;
                 }
 
-                _logger.LogInformation("Executing {Cronjob}", execution.Cronjob);
-                try
-                {
-                    await _executionMonitor.StartedAsync(execution).ConfigureAwait(false);
-                    await execution.Cronjob.ExecuteAsync(stoppingToken);
-                    await _executionMonitor.FinishedAsync(execution).ConfigureAwait(false);
-
-                    _logger.LogInformation("Finished executing {Cronjob}", execution.Cronjob);
-                }
-                catch (Exception e)
-                {
-                    await _executionMonitor.FailedAsync(execution, e).ConfigureAwait(false);
-                    _logger.LogError(e, "Failed to execute {Cronjob}", execution.Cronjob);
-                }
-                finally
-                {
-                    _logger.LogInformation("Finished {Cronjob}", execution.Cronjob);
-                }
+                _logger.LogInformation("Dequeued {Cronjob} with executionId={ExecutionId}", execution.GetType().Name, execution.ExecutionId);
+                await _executor.ExecuteAsync(execution, stoppingToken);
             }
         }
     }

@@ -43,6 +43,7 @@ namespace TT.Cronjobs.AspNetCore
             services.AddSingleton<ICronjobQueue, SynchronizedCronjobQueue>();
             services.AddTransient<CronjobWebhookProvider>();
             services.AddTransient<ICronjobExecutionMonitor, NoopCronjobExecutionMonitor>();
+            services.AddTransient<ICronjobExecutor, CronjobExecutor>();
 
             services.AddTransient<ICronjobProvider, AssemblyCronjobProvider>(
                 provider =>
