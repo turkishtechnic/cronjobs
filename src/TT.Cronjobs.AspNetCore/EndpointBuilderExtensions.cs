@@ -51,7 +51,7 @@ namespace TT.Cronjobs.AspNetCore
 
                 // Cronjobs will be executed outside request context,
                 // So we're using endpoints.ServiceProvider, because context.RequestServices is request-scoped.
-                var executionContext = new CronjobExecutionContext(cronjob, executionId, endpoints.ServiceProvider);
+                var executionContext = new CronjobExecutionContext(cronjob, executionId);
 
                 var executorQueue = context.RequestServices.GetRequiredService<ICronjobQueue>();
                 await executorQueue.EnqueueAsync(executionContext).ConfigureAwait(false);
