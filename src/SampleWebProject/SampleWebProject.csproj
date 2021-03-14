@@ -5,13 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="[3.1.0,5.0.0)" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
-      <ProjectReference Include="..\TT.Cronjobs.Blitz\TT.Cronjobs.Blitz.csproj" />
+        <ProjectReference Include="..\TT.Cronjobs.AspNetCore\TT.Cronjobs.AspNetCore.csproj" />
+        <ProjectReference Include="..\TT.Cronjobs.Blitz\TT.Cronjobs.Blitz.csproj" />
     </ItemGroup>
 
 </Project>
