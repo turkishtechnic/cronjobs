@@ -69,8 +69,8 @@ namespace TT.Cronjobs.Tests
         public void MissingConfigurationThrowsError()
         {
             var mockConfig = new Mock<IConfiguration>();
-            mockConfig.SetupGet(conf => conf[It.Is<string>(s => s == CronjobsOptions.Key)])
-                .Returns(() => null);
+            mockConfig.Setup(conf => conf.GetSection(It.Is<string>(s => s != CronjobsOptions.Key)))
+                .Returns(It.IsAny<IConfigurationSection>());
             var configurator = new CronjobsBuilderExtensions.ConfigureBlitz(mockConfig.Object);
 
             Assert.Throws<ApplicationException>(() => configurator.Configure(new BlitzOptions()));

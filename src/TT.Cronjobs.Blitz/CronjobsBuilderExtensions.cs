@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,9 +56,12 @@ namespace TT.Cronjobs.Blitz
 
             public void Configure(BlitzOptions options)
             {
-                var section = _configuration.GetSection(CronjobsOptions.Key) ??
-                              throw new ApplicationException($"Missing configuration keyed '{CronjobsOptions.Key}'");
-                section.Bind(options);
+                if (!_configuration.GetChildren().Any(it => it.Key == CronjobsOptions.Key))
+                {
+                    throw new ApplicationException($"Missing configuration keyed '{CronjobsOptions.Key}'");
+                }
+
+                _configuration.Bind(CronjobsOptions.Key, options);
             }
         }
     }
