@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -62,6 +63,17 @@ namespace TT.Cronjobs.Tests
                 m => m.UpdateExecutionStatusAsync("1", It.Is<StatusUpdate>(update => update.State == ExecutionState.Failed.Name), default),
                 Times.Once
             );
+        }
+
+        [Fact]
+        public void MissingConfigurationThrowsError()
+        {
+            var mockConfig = new Mock<IConfiguration>();
+            mockConfig.SetupGet(conf => conf[It.Is<string>(s => s == CronjobsOptions.Key)])
+                .Returns(() => null);
+            var configurator = new CronjobsBuilderExtensions.ConfigureBlitz(mockConfig.Object);
+
+            Assert.Throws<ApplicationException>(() => configurator.Configure(new BlitzOptions()));
         }
 
         private async Task<IHost> CreateHost(Action<BlitzOptions> configureBlitz,

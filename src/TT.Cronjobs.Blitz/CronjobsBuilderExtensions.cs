@@ -52,7 +52,13 @@ namespace TT.Cronjobs.Blitz
         {
             private readonly IConfiguration _configuration;
             public ConfigureBlitz(IConfiguration configuration) => _configuration = configuration;
-            public void Configure(BlitzOptions options) => _configuration.GetSection(CronjobsOptions.Key).Bind(options);
+
+            public void Configure(BlitzOptions options)
+            {
+                var section = _configuration.GetSection(CronjobsOptions.Key) ??
+                              throw new ApplicationException($"Missing configuration keyed '{CronjobsOptions.Key}'");
+                section.Bind(options);
+            }
         }
     }
 }
