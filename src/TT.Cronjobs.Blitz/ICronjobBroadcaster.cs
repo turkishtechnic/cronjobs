@@ -37,7 +37,7 @@ namespace TT.Cronjobs.Blitz
 
         public async Task BroadcastAsync(CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Finding cronjobs");
+            _logger.LogDebug("Finding cronjobs");
             List<CronjobWebhook> jobs;
             try
             {
@@ -48,6 +48,12 @@ namespace TT.Cronjobs.Blitz
             {
                 _logger.LogError(e, "An error occurred while discovering cronjobs");
                 throw;
+            }
+
+            if (!jobs.Any())
+            {
+                _logger.LogDebug("Cannot find any cronjobs");
+                return;
             }
 
             var payload = new ProjectBatchRegistration
