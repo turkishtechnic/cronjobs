@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System;
+using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -44,10 +45,20 @@ namespace TT.Cronjobs.AspNetCore
                     return;
                 }
 
-                logger.LogInformation("Received request to trigger {Cronjob}", cronjobName);
 
-                var factory = context.RequestServices.GetRequiredService<ICronjobFactory>();
-                var cronjob = factory.Create(cronjobName);
+                ICronjob cronjob;
+                try
+                {
+                    var factory = context.RequestServices.GetRequiredService<ICronjobFactory>();
+                    cronjob = factory.Create(cronjobName);
+                }
+                catch (ApplicationException e)
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return;
+                }
+
+                logger.LogInformation("Received request to trigger {CronjobType}", cronjob.GetType().FullName);
 
                 // Cronjobs will be executed outside request context,
                 // So we're using endpoints.ServiceProvider, because context.RequestServices is request-scoped.

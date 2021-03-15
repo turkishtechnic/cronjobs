@@ -36,7 +36,7 @@ namespace TT.Cronjobs.Blitz
                     var options = provider.GetRequiredService<IOptions<BlitzOptions>>().Value;
                     // Ensure API base URL ends with a slash
                     // Relative URLs dont work if URL does not end with a slash /
-                    client.BaseAddress = new Uri($"{options.ApiBaseUrl.TrimEnd('/')}/");
+                    client.BaseAddress = new Uri(options.ApiBaseUrl).WithTrailingSlash();
                     client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 })
                 .AddPolicyHandler((provider, _) =>
