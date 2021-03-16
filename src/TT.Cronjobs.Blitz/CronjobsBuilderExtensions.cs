@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,9 @@ namespace TT.Cronjobs.Blitz
             builder.Services.AddHttpClient<ICronjobApiClient, BlitzCronjobApiClient>((provider, client) =>
                 {
                     var options = provider.GetRequiredService<IOptions<BlitzOptions>>().Value;
-                    client.BaseAddress = new Uri(options.ApiBaseUrl);
+                    // Ensure API base URL ends with a slash
+                    // Relative URLs dont work if URL does not end with a slash /
+                    client.BaseAddress = new Uri(options.ApiBaseUrl).WithTrailingSlash();
                     client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 })
                 .AddPolicyHandler((provider, _) =>
@@ -55,9 +58,12 @@ namespace TT.Cronjobs.Blitz
 
             public void Configure(BlitzOptions options)
             {
-                var section = _configuration.GetSection(CronjobsOptions.Key) ??
-                              throw new ApplicationException($"Missing configuration keyed '{CronjobsOptions.Key}'");
-                section.Bind(options);
+                if (!_configuration.GetChildren().Any(it => it.Key == CronjobsOptions.Key))
+                {
+                    throw new ApplicationException($"Missing configuration keyed '{CronjobsOptions.Key}'");
+                }
+
+                _configuration.Bind(CronjobsOptions.Key, options);
             }
         }
     }
