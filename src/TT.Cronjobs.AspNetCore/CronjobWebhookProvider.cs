@@ -21,7 +21,9 @@ namespace TT.Cronjobs.AspNetCore
             .Select(it =>
             {
                 var path = $"{_options.RoutePattern.TrimEnd('/')}/{it.Name.ToLowerInvariant()}";
-                var url = _options.WebhookBaseUrl == null ? path : new Uri(new Uri(_options.WebhookBaseUrl).WithTrailingSlash(), path).ToString();
+                var url = _options.WebhookBaseUrl == null
+                    ? path
+                    : new Uri(new Uri(_options.WebhookBaseUrl).WithTrailingSlash(), path.TrimStart('/')).ToString();
                 return new CronjobWebhook
                 {
                     Url = url,
