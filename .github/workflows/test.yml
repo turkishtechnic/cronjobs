@@ -2,11 +2,8 @@ on:
   push:
     branches:
       - dev
-      - master
-  pull_request:
-    branches:
-      - dev
-      - master
+    paths:
+      - 'src/**'
   workflow_dispatch:
 
 jobs:

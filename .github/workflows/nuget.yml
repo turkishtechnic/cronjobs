@@ -1,22 +1,27 @@
 on:
   push:
     branches:
-      - v*
-  pull_request:
-    branches:
-      - v*
+      - master
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: run tests
+        run: dotnet test
+    
+  nuget:
+    needs: 
+      - test
+    runs-on: ubuntu-latest
+    # only run if the commit is tagged like v#
+    if: ${{ startsWith('refs/tags/v', github.ref) }}
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: run tests
-        run: dotnet test
 
       - name: publish TT.Cronjobs
         uses: rohith/publish-nuget@v2
