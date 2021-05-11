@@ -11,8 +11,18 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
         <IncludeSymbols>true</IncludeSymbols>
+        <IncludeDebugSymbolsProjectOutputGroup>true</IncludeDebugSymbolsProjectOutputGroup>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <EmbedAllSources>true</EmbedAllSources>
+        <DebugType>embedded</DebugType>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     
+    <PropertyGroup Label="MinVer Settings">
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+        <MinVerVerbosity>normal</MinVerVerbosity>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)/../LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" Visible="false" />
         <None Include="$(MSBuildThisFileDirectory)/../ttlogo.png" Pack="true" PackagePath="icon.png" Visible="false" />
