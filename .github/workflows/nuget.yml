@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -16,8 +16,8 @@ jobs:
     needs: 
       - test
     runs-on: ubuntu-latest
-    # only run if the commit is tagged like v#
-    if: ${{ startsWith('refs/tags/v', github.ref) }}
+    # only run on master branch
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
         with:
