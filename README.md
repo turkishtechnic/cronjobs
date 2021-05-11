@@ -11,7 +11,7 @@ This package provides us with the primitives necessary to define, manage, and tr
 
 ## Usage
 
-Install `TT.Cronjobs.AspNetCore` package
+Install [`TT.Cronjobs.AspNetCore`](https://www.nuget.org/packages/TT.Cronjobs.AspNetCore/) package
 
 ```powershell
 dotnet add package TT.Cronjobs.AspNetCore
