@@ -34,7 +34,7 @@ namespace TT.Cronjobs.Tests
             );
 
             // just in case
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             Assert.NotNull(blitzClient.ProjectBatchRegistration);
             Assert.NotEmpty(blitzClient.ProjectBatchRegistration.Cronjobs);

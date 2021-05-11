@@ -111,7 +111,7 @@ namespace TT.Cronjobs.Tests
             await client.SendAsync(req);
 
             // just in case
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             mockMonitor.Verify(m => m.FailedAsync(It.IsAny<CronjobExecutionContext>(), It.IsAny<Exception>()), Times.Once);
         }
