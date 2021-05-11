@@ -1,28 +1,20 @@
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: run tests
-        run: dotnet test
-    
-  nuget:
-    needs: 
-      - test
-    runs-on: ubuntu-latest
-    # only run on master branch
-    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
+      
+      - name: run tests
+        run: dotnet test
+        
       - name: publish TT.Cronjobs
         uses: rohith/publish-nuget@v2
         with:
@@ -30,7 +22,7 @@ jobs:
           VERSION_STATIC: 1.0.0
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+          # INCLUDE_SYMBOLS: true
 
       - name: publish TT.Cronjobs.AspNetCore
         uses: rohith/publish-nuget@v2
@@ -39,7 +31,7 @@ jobs:
           VERSION_STATIC: 1.0.0
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+          # INCLUDE_SYMBOLS: true
 
       - name: publish TT.Cronjobs.Blitz
         uses: rohith/publish-nuget@v2
@@ -48,4 +40,4 @@ jobs:
           VERSION_STATIC: 1.0.0
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+          # INCLUDE_SYMBOLS: true
