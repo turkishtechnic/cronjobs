@@ -17,7 +17,7 @@ using Xunit;
 
 namespace TT.Cronjobs.Tests
 {
-    public class WebhookTests
+    public class WebhookIntegrationTests
     {
         [Fact]
         public async Task CronjobsAreDiscovered()
