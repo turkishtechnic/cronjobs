@@ -20,13 +20,13 @@ namespace TT.Cronjobs.Blitz
         private readonly IHostEnvironment _environment;
         private readonly IVersionProvider _versionProvider;
         private readonly ILogger<CronjobRegistrationBroadcaster> _logger;
-        private readonly CronjobWebhookProvider _cronjobWebhookProvider;
+        private readonly ICronjobWebhookProvider _cronjobWebhookProvider;
 
         public CronjobRegistrationBroadcaster(IHostEnvironment environment,
                                               ICronjobApiClient cronjobApi,
                                               IVersionProvider versionProvider,
                                               ILogger<CronjobRegistrationBroadcaster> logger,
-                                              CronjobWebhookProvider cronjobWebhookProvider)
+                                              ICronjobWebhookProvider cronjobWebhookProvider)
         {
             _environment = environment;
             _cronjobApi = cronjobApi;

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace TT.Cronjobs.AspNetCore
 {
-    public class CronjobWebhookProvider
+    internal class CronjobWebhookProvider : ICronjobWebhookProvider
     {
         private readonly IEnumerable<ICronjobProvider> _cronjobProviders;
         private readonly CronjobsOptions _options;

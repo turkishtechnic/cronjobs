@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TT.Cronjobs.AspNetCore;
 
 namespace TT.Cronjobs.Blitz
 {
@@ -17,8 +16,7 @@ namespace TT.Cronjobs.Blitz
         public CronjobBroadcasterService(
             IOptions<BlitzOptions> options,
             ICronjobBroadcaster broadcaster,
-            ILogger<CronjobBroadcasterService> logger,
-            CronjobWebhookProvider cronjobWebhookProvider)
+            ILogger<CronjobBroadcasterService> logger)
         {
             _options = options.Value;
             _broadcaster = broadcaster;
