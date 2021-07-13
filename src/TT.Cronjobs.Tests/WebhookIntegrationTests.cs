@@ -65,8 +65,6 @@ namespace TT.Cronjobs.Tests
                     options.RoutePattern = "cronjobs";
                     options.WebhookBaseUrl = "https://example.com";
                 },
-                configureServices: services =>
-                    services.AddAuthorization(),
                 configureApp: app => app.Use(async (context, next) =>
                 {
                     var claims = new List<Claim> { new Claim("cronjob", "true") };
