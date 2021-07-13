@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.Blitz", "src\TT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.Cronjobs.Tests", "src\TT.Cronjobs.Tests\TT.Cronjobs.Tests.csproj", "{43270379-D517-4646-B9B7-4644A99227C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTtmsApi", "src\SampleTtmsApi\SampleTtmsApi.csproj", "{7EB4243E-92EE-46C1-ACDD-8811B62B48E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{43270379-D517-4646-B9B7-4644A99227C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43270379-D517-4646-B9B7-4644A99227C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43270379-D517-4646-B9B7-4644A99227C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EB4243E-92EE-46C1-ACDD-8811B62B48E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EB4243E-92EE-46C1-ACDD-8811B62B48E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EB4243E-92EE-46C1-ACDD-8811B62B48E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EB4243E-92EE-46C1-ACDD-8811B62B48E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

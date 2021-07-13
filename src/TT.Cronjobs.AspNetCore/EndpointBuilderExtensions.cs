@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Mime;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,7 +24,7 @@ namespace TT.Cronjobs.AspNetCore
                 var providers = context.RequestServices.GetRequiredService<CronjobWebhookProvider>();
                 var payload = JsonSerializer.Serialize(
                     providers.Cronjobs,
-                    new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
                 );
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 return context.Response.WriteAsync(payload);
@@ -31,6 +32,16 @@ namespace TT.Cronjobs.AspNetCore
 
             return endpoints.MapPost(triggerEndpointPattern, async context =>
             {
+                // We're not using IEndpointConventionsBuilder.RequireAuthorization method
+                // because we're not sure if the authentication services are registered
+                // and don't want to throw error
+                var authResult = await context.RequestServices.GetRequiredService<IAuthorizationService>().AuthorizeAsync(context.User, "cronjob");
+                if (!authResult.Succeeded)
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 if (!(context.GetRouteValue("name") is string cronjobName))
                 {
                     context.Response.StatusCode = StatusCodes.Status404NotFound;

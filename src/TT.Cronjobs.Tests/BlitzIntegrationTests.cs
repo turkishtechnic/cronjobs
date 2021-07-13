@@ -16,7 +16,7 @@ using Xunit;
 
 namespace TT.Cronjobs.Tests
 {
-    public class BlitzTests
+    public partial class BlitzTests
     {
         [Fact]
         public async Task CronjobsAreRegisteredAtStartup()
@@ -109,14 +109,6 @@ namespace TT.Cronjobs.Tests
                 }).Build();
             await host.StartAsync();
             return host;
-        }
-
-        class FakeCronjobProvider : ICronjobProvider
-        {
-            public IEnumerable<CronjobInfo> Cronjobs { get; } = new[]
-            {
-                new CronjobInfo(typeof(SimpleCronjob))
-            };
         }
 
         class FakeBlitzClient : ICronjobApiClient

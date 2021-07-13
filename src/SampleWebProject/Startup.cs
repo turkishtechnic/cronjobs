@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SampleWebProject.Jobs;
-using TT.Cronjobs;
 using TT.Cronjobs.AspNetCore;
 using TT.Cronjobs.Blitz;
 
@@ -24,7 +24,7 @@ namespace SampleWebProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CronjobsOptions>(Configuration.GetSection(CronjobsOptions.Key));
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddCronjobs().UseBlitz();
 
             services.AddTransient<FailingCronjob>();

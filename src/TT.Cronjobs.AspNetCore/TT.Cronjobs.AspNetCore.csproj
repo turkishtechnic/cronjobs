@@ -10,6 +10,8 @@
         <PackageReference Include="Microsoft.Extensions.Http" Version="[3.1.0,5.0.0)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[3.1.0,5.0.0)" />
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="[3.1.0,5.0.0)" />
+        <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="5.5.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="5.5.0" />
     </ItemGroup>
 
     <ItemGroup>

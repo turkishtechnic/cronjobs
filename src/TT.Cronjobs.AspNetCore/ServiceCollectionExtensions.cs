@@ -48,6 +48,8 @@ namespace TT.Cronjobs.AspNetCore
             services.AddTransient<ICronjobExecutionMonitor, NoopCronjobExecutionMonitor>();
             services.AddTransient<ICronjobExecutor, CronjobExecutor>();
 
+            services.AddAuthorization(options => options.AddPolicy("cronjob", builder => builder.RequireClaim("cronjob", "true", "1")));
+
             services.AddTransient<ICronjobProvider, AssemblyCronjobProvider>(
                 provider =>
                 {
