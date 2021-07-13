@@ -66,7 +66,7 @@ namespace TT.Cronjobs.AspNetCore
                     var factory = context.RequestServices.GetRequiredService<ICronjobFactory>();
                     cronjob = factory.Create(cronjobName);
                 }
-                catch (ApplicationException e)
+                catch (ApplicationException)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
                     return;
