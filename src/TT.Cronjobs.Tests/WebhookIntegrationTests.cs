@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -34,14 +37,14 @@ namespace TT.Cronjobs.Tests
             Assert.Equal(MediaTypeNames.Application.Json, response.Content.Headers.ContentType.MediaType);
             var json = await response.Content.ReadAsStringAsync();
 
-            var items = JsonSerializer.Deserialize<List<CronjobWebhook>>(json, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+            var items = JsonSerializer.Deserialize<List<CronjobWebhook>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             Assert.NotEmpty(items);
             Assert.Equal(new CronjobInfo(typeof(SimpleCronjob)).Cron, items.First().Cron);
             Assert.Equal($"https://example.com/cronjobs/{nameof(SimpleCronjob).ToLowerInvariant()}", items.First().Url);
         }
 
         [Fact]
-        public async Task CannotTriggerCronjobWithoutExecutionIdHeader()
+        public async Task CannotTriggerCronjobWithoutAuth()
         {
             var host = await CreateHost(options =>
             {
@@ -51,23 +54,33 @@ namespace TT.Cronjobs.Tests
 
             var client = host.GetTestClient();
             var response = await client.PostAsync($"cronjobs/{nameof(SimpleCronjob)}", new StringContent(""));
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [Fact]
-        public async Task CronjobIsTriggered()
+        public async Task CanTriggerCronjobWithAuth()
         {
             var host = await CreateHost(options =>
-            {
-                options.RoutePattern = "cronjobs";
-                options.WebhookBaseUrl = "https://example.com";
-            });
-
+                {
+                    options.RoutePattern = "cronjobs";
+                    options.WebhookBaseUrl = "https://example.com";
+                },
+                configureServices: services =>
+                    services.AddAuthorization(),
+                configureApp: app => app.Use(async (context, next) =>
+                {
+                    var claims = new List<Claim> { new Claim("cronjob", "true") };
+                    var user = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+                    context.User = user;
+                    await next();
+                }));
             var client = host.GetTestClient();
             var req = new HttpRequestMessage(HttpMethod.Post, $"cronjobs/{nameof(SimpleCronjob)}");
             req.Headers.Add("Execution-Id", "1");
+            
             var response = await client.SendAsync(req);
-            Assert.True(response.IsSuccessStatusCode);
+            
+            Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
         }
 
         [Fact]
@@ -81,6 +94,7 @@ namespace TT.Cronjobs.Tests
             {
                 options.RoutePattern = "cronjobs";
                 options.WebhookBaseUrl = "https://example.com";
+                options.IsAuthenticated = false;
             }, services => services.AddTransient<ICronjobExecutionMonitor>(_ => mockMonitor.Object));
 
             var client = host.GetTestClient();
@@ -103,6 +117,7 @@ namespace TT.Cronjobs.Tests
             {
                 options.RoutePattern = "cronjobs";
                 options.WebhookBaseUrl = "https://example.com";
+                options.IsAuthenticated = false;
             }, services => services.AddTransient<ICronjobExecutionMonitor>(_ => mockMonitor.Object));
 
             var client = host.GetTestClient();
@@ -126,7 +141,9 @@ namespace TT.Cronjobs.Tests
             };
         }
 
-        private async Task<IHost> CreateHost(Action<CronjobsOptions> configure, Action<IServiceCollection> configureServices = null)
+        private async Task<IHost> CreateHost(Action<CronjobsOptions> configure,
+                                             Action<IServiceCollection> configureServices = null,
+                                             Action<IApplicationBuilder> configureApp = null)
         {
             var host = new HostBuilder()
                 .ConfigureWebHost(builder =>
@@ -142,8 +159,12 @@ namespace TT.Cronjobs.Tests
                             services.AddTransient<ICronjobProvider, FakeCronjobProvider>();
                             configureServices?.Invoke(services);
                         })
-                        .Configure(app
-                            => app.UseRouting().UseEndpoints(routeBuilder => { routeBuilder.MapCronjobWebhook(); }));
+                        .Configure(app =>
+                        {
+                            app.UseRouting();
+                            configureApp?.Invoke(app);
+                            app.UseEndpoints(routeBuilder => { routeBuilder.MapCronjobWebhook(); });
+                        });
                 }).Build();
             await host.StartAsync();
             return host;

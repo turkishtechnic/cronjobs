@@ -21,7 +21,7 @@ namespace TT.Cronjobs.AspNetCore
 
             endpoints.MapGet(listEndpointPattern, context =>
             {
-                var providers = context.RequestServices.GetRequiredService<CronjobWebhookProvider>();
+                var providers = context.RequestServices.GetRequiredService<ICronjobWebhookProvider>();
                 var payload = JsonSerializer.Serialize(
                     providers.Cronjobs,
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
@@ -32,14 +32,17 @@ namespace TT.Cronjobs.AspNetCore
 
             return endpoints.MapPost(triggerEndpointPattern, async context =>
             {
-                // We're not using IEndpointConventionsBuilder.RequireAuthorization method
-                // because we're not sure if the authentication services are registered
-                // and don't want to throw error
-                var authResult = await context.RequestServices.GetRequiredService<IAuthorizationService>().AuthorizeAsync(context.User, "cronjob");
-                if (!authResult.Succeeded)
+                var options = context.RequestServices.GetRequiredService<IOptions<CronjobsOptions>>().Value;
+                if (options.IsAuthenticated)
                 {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
+                    var authResult = await context.RequestServices
+                        .GetRequiredService<IAuthorizationService>()
+                        .AuthorizeAsync(context.User, "cronjob");
+                    if (!authResult.Succeeded)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return;
+                    }
                 }
 
                 if (!(context.GetRouteValue("name") is string cronjobName))
