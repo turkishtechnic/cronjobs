@@ -32,6 +32,16 @@ namespace TT.Cronjobs.Blitz
         public string Title { get; set; }
         public string Version { get; set; }
         public IEnumerable<CronjobWebhook> Cronjobs { get; set; }
+        public string TemplateKey { get; set; }
+        public TokenAuth Auth { get; set; }
+    }
+    
+    public class TokenAuth
+    {
+        public string TokenEndpoint { get; set; }
+        public string Scope { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
 
     public sealed class ExecutionState
